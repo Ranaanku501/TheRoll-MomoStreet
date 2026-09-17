@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Roll & Momos Street Food
 
-## Getting Started
+Marketing + ordering website built with Next.js 15 (App Router), TypeScript and Tailwind CSS v3.
+Customers browse the menu, build a cart, and the order is sent to your WhatsApp — no backend needed.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm start       # serve the production build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pages
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Route      | What's on it                                                        |
+| ---------- | ------------------------------------------------------------------- |
+| `/`        | Hero, category grid, bestsellers, why-us, reviews, timings CTA      |
+| `/menu`    | All 54 items with search, category tabs and veg / non-veg filter    |
+| `/about`   | Story, timeline and the three rules behind the counter              |
+| `/contact` | Address, timings, map placeholder and a WhatsApp enquiry form       |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## The two files you will edit most
 
-## Learn More
+### 1. `src/lib/site.ts` — your shop details
 
-To learn more about Next.js, take a look at the following resources:
+Phone number, **WhatsApp number**, address, timings, socials, minimum order.
+Set `whatsapp` to digits only with the country code, e.g. `"919812345678"` — this powers every
+"Order on WhatsApp" button.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 2. `src/lib/menu.ts` — the menu itself
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add or edit items in the `menu` array:
 
-## Deploy on Vercel
+```ts
+{
+  id: "steamed-veg-momos",      // unique, used as the cart key
+  name: "Steamed Veg Momos",
+  description: "Eight hand-pleated dumplings…",
+  price: 70,                     // half plate / single price
+  priceFull: 120,                // optional — shows an extra "Add full" button
+  categoryId: "momos",           // must match a category id below
+  veg: true,
+  emoji: "🥟",                   // shown when there is no photo
+  tags: ["bestseller"],          // bestseller | spicy | new | chefs-pick
+  image: "/menu/steamed-momos.jpg", // optional, see below
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Categories live in the same file (`momos`, `rolls`, `spring-rolls`, `noodles`, `burgers`,
+`sides`, `beverages`). Anything tagged `bestseller` automatically appears on the home page.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Adding real food photos
+
+Drop images into `public/menu/` and point the item's `image` field at them
+(e.g. `image: "/menu/egg-roll.jpg"`). Without an image the card falls back to a gradient +
+emoji tile, so the site never looks broken. Aim for ~800×600 JPGs under 200 KB.
+
+Your logo is at `public/logo.png` (used in the navbar) and `src/app/icon.png` (browser tab).
+
+## How ordering works
+
+`src/components/cart-provider.tsx` holds the cart in React context and mirrors it to
+`localStorage`, so a cart survives a page refresh. On checkout it builds a pre-filled
+`wa.me` message with every line item and the total. To move to real online payments later,
+replace the WhatsApp link in `src/components/cart-drawer.tsx` with a checkout API route.
+
+## Theme
+
+Brand colours (`chilli`, `masala`, `charcoal`, `cream`), fonts and animations are defined in
+`tailwind.config.ts`. Reusable classes like `.btn-primary`, `.card`, `.chip` and
+`.container-page` live in `src/app/globals.css`.
+
+## Note on Node
+
+This project is pinned to Next.js 15 because Node 18 is installed. Upgrading to Node 20+
+lets you move to Next 16, which also clears the remaining `npm audit` advisories.

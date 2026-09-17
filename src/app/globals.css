@@ -2,20 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    @apply bg-cream text-charcoal-900 antialiased;
+  }
+
+  ::selection {
+    @apply bg-chilli-500 text-white;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-chilli-500 focus-visible:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-chilli-600 text-white shadow-card hover:-translate-y-0.5 hover:bg-chilli-700;
+  }
+
+  .btn-secondary {
+    @apply btn border border-charcoal-900/15 bg-white text-charcoal-900 hover:border-chilli-500 hover:text-chilli-700;
+  }
+
+  .btn-ghost {
+    @apply btn text-charcoal-900/70 hover:bg-charcoal-900/5 hover:text-charcoal-900;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide;
+  }
+
+  .card {
+    @apply rounded-3xl border border-charcoal-900/10 bg-white shadow-card;
+  }
+
+  .eyebrow {
+    @apply text-xs font-bold uppercase tracking-[0.28em] text-chilli-600;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }

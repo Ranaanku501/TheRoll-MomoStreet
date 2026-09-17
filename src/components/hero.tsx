@@ -18,7 +18,7 @@ export function Hero() {
 
       <div className="container-page grid items-center gap-12 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:py-24">
         <div className="animate-fade-up space-y-7 text-white">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] backdrop-blur">
+          <span className="inline-flex items-center gap-1 sm:gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.22em] backdrop-blur">
             <span className="h-2 w-2 animate-pulse rounded-full bg-masala-300" />
             Fresh off the tawa · Open today
           </span>

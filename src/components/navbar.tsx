@@ -31,26 +31,25 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-charcoal-900/10 bg-cream/90 backdrop-blur-md"
-          : "bg-transparent"
-      }`}
+      className={`sticky top-0 z-40 transition-all duration-300 ${scrolled
+        ? "border-b border-charcoal-900/10 bg-cream/90 backdrop-blur-md"
+        : "bg-transparent"
+        }`}
     >
-      <div className="container-page flex h-[72px] items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="relative h-11 w-11 overflow-hidden rounded-full border border-charcoal-900/10 bg-white shadow-sm">
+      <div className="container-page flex h-[72px] sm:h-[100px] items-center justify-between gap-4">
+        <Link href="/" className="flex items-center gap-0">
+          <span className="relative h-32 w-32 overflow-hidden ">
             <Image
               src="/logo.png"
               alt={`${site.fullName} logo`}
               fill
-              sizes="44px"
+              sizes=""
               className="object-contain p-0.5"
               priority
             />
           </span>
           <span className="leading-tight">
-            <span className="block font-display text-lg font-extrabold tracking-tight">
+            <span className="block font-display text-lg font-extrabold tracking-tight leading-none">
               {site.name}
             </span>
             <span className="block text-[10px] font-bold uppercase tracking-[0.3em] text-chilli-600">
@@ -69,11 +68,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
-                  active
-                    ? "bg-chilli-600 text-white"
-                    : "text-charcoal-900/70 hover:bg-charcoal-900/5 hover:text-charcoal-900"
-                }`}
+                className={`rounded-full px-4 py-2 text-sm font-semibold transition ${active
+                  ? "bg-chilli-600 text-white"
+                  : "text-charcoal-900/70 hover:bg-charcoal-900/5 hover:text-charcoal-900"
+                  }`}
               >
                 {link.label}
               </Link>

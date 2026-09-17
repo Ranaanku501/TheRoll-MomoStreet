@@ -14,7 +14,7 @@ const promises = [
   {
     emoji: "🌿",
     title: "Fresh stuffing daily",
-    copy: "Vegetables chopped every morning, paneer and chicken sourced fresh — never frozen leftovers.",
+    copy: "Vegetables chopped every morning, paneer and eggs sourced fresh — never frozen leftovers.",
   },
   {
     emoji: "🌶️",

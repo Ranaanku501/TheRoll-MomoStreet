@@ -5,7 +5,7 @@ import { MenuItemCard } from "@/components/menu-item-card";
 import { categories, menu, type CategoryId } from "@/lib/menu";
 
 type Filter = "all" | CategoryId;
-type DietFilter = "all" | "veg" | "non-veg";
+type DietFilter = "all" | "veg" | "egg";
 
 export function MenuExplorer() {
   const [filter, setFilter] = useState<Filter>("all");
@@ -21,7 +21,7 @@ export function MenuExplorer() {
     const search = query.trim().toLowerCase();
     return menu.filter((item) => {
       if (diet === "veg" && !item.veg) return false;
-      if (diet === "non-veg" && item.veg) return false;
+      if (diet === "egg" && item.veg) return false;
       if (!search) return true;
       return (
         item.name.toLowerCase().includes(search) ||
@@ -70,7 +70,7 @@ export function MenuExplorer() {
               [
                 { id: "all", label: "All" },
                 { id: "veg", label: "Veg" },
-                { id: "non-veg", label: "Non-veg" },
+                { id: "egg", label: "Egg" },
               ] as const
             ).map((option) => (
               <button

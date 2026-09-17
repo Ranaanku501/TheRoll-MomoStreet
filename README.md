@@ -3,6 +3,9 @@
 Marketing + ordering website built with Next.js 15 (App Router), TypeScript and Tailwind CSS v3.
 Customers browse the menu, build a cart, and the order is sent to your WhatsApp — no backend needed.
 
+The menu is pure veg + egg: there are no chicken or meat items. Items with `veg: false` are egg
+dishes and get an amber badge on the card.
+
 ## Run it
 
 ```bash
@@ -17,7 +20,7 @@ npm run lint
 | Route      | What's on it                                                        |
 | ---------- | ------------------------------------------------------------------- |
 | `/`        | Hero, category grid, bestsellers, why-us, reviews, timings CTA      |
-| `/menu`    | All 54 items with search, category tabs and veg / non-veg filter    |
+| `/menu`    | All 49 items with search, category tabs and pure veg / egg filter   |
 | `/about`   | Story, timeline and the three rules behind the counter              |
 | `/contact` | Address, timings, map placeholder and a WhatsApp enquiry form       |
 
@@ -41,7 +44,7 @@ Add or edit items in the `menu` array:
   price: 70,                     // half plate / single price
   priceFull: 120,                // optional — shows an extra "Add full" button
   categoryId: "momos",           // must match a category id below
-  veg: true,
+  veg: true,                     // false marks it as an egg item (amber badge)
   emoji: "🥟",                   // shown when there is no photo
   tags: ["bestseller"],          // bestseller | spicy | new | chefs-pick
   image: "/menu/steamed-momos.jpg", // optional, see below

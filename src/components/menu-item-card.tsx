@@ -8,14 +8,14 @@ import { formatPrice } from "@/lib/site";
 function VegBadge({ veg }: { veg: boolean }) {
   return (
     <span
-      title={veg ? "Vegetarian" : "Non-vegetarian"}
+      title={veg ? "Pure vegetarian" : "Contains egg"}
       className={`flex h-4 w-4 items-center justify-center rounded-sm border-2 ${
-        veg ? "border-green-600" : "border-red-700"
+        veg ? "border-green-600" : "border-amber-500"
       }`}
     >
       <span
         className={`h-1.5 w-1.5 rounded-full ${
-          veg ? "bg-green-600" : "bg-red-700"
+          veg ? "bg-green-600" : "bg-amber-500"
         }`}
       />
     </span>

@@ -9,9 +9,9 @@ export const site = {
   description:
     "Steamed & fried momos, crispy spring rolls, egg and paneer rolls, hakka noodles, burgers and more — hot off the tawa, wrapped fresh for you.",
   // Digits only, with country code. Used for the WhatsApp order link.
-  whatsapp: "919999999999",
-  phoneDisplay: "+91 99999 99999",
-  phoneHref: "tel:+919999999999",
+  whatsapp: "919779332204",
+  phoneDisplay: "+919779332204",
+  phoneHref: "tel:+919779332204",
   email: "hello@therollandmomos.com",
   address: {
     line1: "Shop No. 12, Food Street Market",
@@ -29,7 +29,7 @@ export const site = {
     swiggy: "https://swiggy.com/",
   },
   stats: [
-    { value: "60+", label: "Street food items" },
+    { value: "45+", label: "Street food items" },
     { value: "15 min", label: "Average serve time" },
     { value: "4.7★", label: "Customer rating" },
     { value: "100%", label: "Fresh daily prep" },

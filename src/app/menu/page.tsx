@@ -23,7 +23,7 @@ export default function MenuPage() {
           </h1>
           <p className="max-w-2xl leading-relaxed text-cream/75">
             Starting at just {formatPrice(cheapest)}. Tap a category to jump
-            straight to it, filter veg or non-veg, then send your cart over on
+            straight to it, filter pure veg or egg, then send your cart over on
             WhatsApp.
           </p>
           <div className="flex flex-wrap gap-2 pt-2">

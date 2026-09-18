@@ -44,6 +44,23 @@ export const site = {
   currency: "₹",
   deliveryRadiusKm: 5,
   minOrder: 149,
+  // UPI only — no cash. Put your real VPA here (e.g. "9779332204@paytm")
+  // so the cart's "Pay with UPI" button can open Google Pay / PhonePe.
+  upiId: "",
+  payment: "upi" as const,
 } as const;
 
 export const formatPrice = (amount: number) => `${site.currency}${amount}`;
+
+/** Opens Google Pay / PhonePe / Paytm with the amount pre-filled. Returns null until upiId is set. */
+export const upiPayUrl = (amount: number, note?: string) => {
+  if (!site.upiId) return null;
+  const params = new URLSearchParams({
+    pa: site.upiId,
+    pn: site.name,
+    am: String(amount),
+    cu: "INR",
+    tn: note?.slice(0, 50) || `Order at ${site.name}`,
+  });
+  return `upi://pay?${params.toString()}`;
+};

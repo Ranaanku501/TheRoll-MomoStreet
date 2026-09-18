@@ -21,6 +21,15 @@ export type CartLine = {
   quantity: number;
 };
 
+export type OrderDetails = {
+  orderType: "delivery" | "takeaway";
+  /** Typed address. Required for delivery orders. */
+  location?: string;
+  /** Google Maps link built from the browser's GPS, when shared. */
+  mapsLink?: string;
+  note?: string;
+};
+
 type CartContextValue = {
   lines: CartLine[];
   count: number;
@@ -33,7 +42,7 @@ type CartContextValue = {
   decrement: (key: string) => void;
   remove: (key: string) => void;
   clear: () => void;
-  whatsappUrl: (note?: string) => string;
+  whatsappUrl: (details: OrderDetails) => string;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -134,7 +143,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const whatsappUrl = useCallback(
-    (note?: string) => {
+    ({ orderType, location, mapsLink, note }: OrderDetails) => {
       const rows = lines.map(
         (line) =>
           `• ${line.name} x${line.quantity} — ${site.currency}${
@@ -147,6 +156,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ...rows,
         "",
         `Total: ${site.currency}${total}`,
+        `Order type: ${orderType === "delivery" ? "Home delivery" : "Takeaway / pickup"}`,
+        orderType === "delivery" && location?.trim()
+          ? `Delivery address: ${location.trim()}`
+          : null,
+        orderType === "delivery" && mapsLink ? `Live location: ${mapsLink}` : null,
+        "Payment: UPI only (no cash)",
+        site.upiId ? `UPI ID: ${site.upiId}` : null,
         note?.trim() ? `Note: ${note.trim()}` : null,
       ]
         .filter(Boolean)

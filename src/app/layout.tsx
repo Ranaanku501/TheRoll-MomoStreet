@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Baloo_2, Plus_Jakarta_Sans } from "next/font/google";
 import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
+import { InstallPrompt } from "@/components/install-prompt";
 import { Navbar } from "@/components/navbar";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -46,6 +47,15 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
+  appleWebApp: {
+    capable: true,
+    title: site.name,
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#dc2a15",
 };
 
 export default function RootLayout({
@@ -59,6 +69,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <CartDrawer />
+          <InstallPrompt />
         </CartProvider>
       </body>
     </html>

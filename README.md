@@ -69,6 +69,36 @@ Your logo is at `public/logos.png` (used in the navbar) and `src/app/icon.png` (
 `wa.me` message with every line item and the total. To move to real online payments later,
 replace the WhatsApp link in `src/components/cart-drawer.tsx` with a checkout API route.
 
+## Install as an app (PWA)
+
+The site is an installable Progressive Web App, so customers can add it to their phone's
+home screen from a plain link — no app store needed.
+
+| Piece                              | What it does                                                    |
+| ---------------------------------- | --------------------------------------------------------------- |
+| `src/app/manifest.ts`              | App name, colours, icons, home-screen shortcuts                 |
+| `public/sw.js`                     | Service worker: caches pages and assets for slow / no internet   |
+| `public/offline.html`              | Shown if someone opens the app with no connection                |
+| `src/components/install-prompt.tsx`| "Install app" banner, plus Add to Home Screen steps on iPhone    |
+| `public/icons/`                    | 192px, 512px and maskable icons generated from the logo          |
+
+**Android / Chrome** fires the install prompt automatically; the banner's Install button
+triggers it. **iPhone / Safari** has no such API, so the banner shows the Share →
+Add to Home Screen steps instead. Dismissing it hides the banner for 14 days.
+
+The service worker is only registered in production builds, so it never interferes with
+`npm run dev`. To test the install flow locally:
+
+```bash
+npm run preview   # build + start, then open http://localhost:3000
+```
+
+Installation requires **HTTPS** (or localhost). It will not work when a phone opens your
+laptop's IP over plain http — deploy first, then test on the phone.
+
+After changing `public/sw.js`, bump the `VERSION` constant at the top so returning visitors
+get the new cache instead of the stale one.
+
 ## Theme
 
 Brand colours (`chilli`, `masala`, `charcoal`, `cream`), fonts and animations are defined in

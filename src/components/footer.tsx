@@ -23,7 +23,7 @@ export function Footer() {
             >
               Instagram
             </a>
-            <a
+            {/* <a
               href={site.socials.zomato}
               target="_blank"
               rel="noopener noreferrer"
@@ -38,7 +38,7 @@ export function Footer() {
               className="rounded-full border border-white/15 px-4 py-2 text-xs font-semibold transition hover:border-masala-400 hover:text-white"
             >
               Swiggy
-            </a>
+            </a> */}
           </div>
         </div>
 

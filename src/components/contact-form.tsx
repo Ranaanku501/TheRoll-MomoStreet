@@ -54,7 +54,7 @@ export function ContactForm() {
             required
             value={name}
             onChange={(event) => setName(event.target.value)}
-            placeholder="Ramesh Kumar"
+            placeholder="Your Name"
             className={fieldClass}
           />
         </label>
@@ -67,7 +67,7 @@ export function ContactForm() {
             type="tel"
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
-            placeholder="98765 43210"
+            placeholder="Your Phone Number"
             className={fieldClass}
           />
         </label>
@@ -83,11 +83,10 @@ export function ContactForm() {
               key={option}
               type="button"
               onClick={() => setReason(option)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
-                reason === option
-                  ? "bg-chilli-600 text-white"
-                  : "border border-charcoal-900/15 text-charcoal-900/65 hover:border-chilli-400"
-              }`}
+              className={`rounded-full px-4 py-2 text-xs font-semibold transition ${reason === option
+                ? "bg-chilli-600 text-white"
+                : "border border-charcoal-900/15 text-charcoal-900/65 hover:border-chilli-400"
+                }`}
             >
               {option}
             </button>

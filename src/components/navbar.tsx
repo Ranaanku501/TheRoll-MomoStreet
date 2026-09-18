@@ -32,8 +32,8 @@ export function Navbar() {
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${scrolled
-        ? "border-b border-charcoal-900/10 bg-cream/90 backdrop-blur-md"
-        : "bg-transparent"
+        ? "border-b border-charcoal-900/10 bg-white"
+        : "bg-white"
         }`}
     >
       <div className="container-page flex h-[72px] sm:h-[100px] items-center justify-between gap-4">

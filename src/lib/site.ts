@@ -12,7 +12,7 @@ export const site = {
   whatsapp: "919779332204",
   phoneDisplay: "+919779332204",
   phoneHref: "tel:+919779332204",
-  email: "hello@therollandmomos.com",
+  email: "ranaanku501@gmail.com",
   address: {
     line1: "Jhungian, Teh. Garhshankar",
     line2: "Hoshiarpur, Punjab 144523",
@@ -24,8 +24,8 @@ export const site = {
       "https://www.google.com/maps?q=Jhungian%2C+Garhshankar%2C+Hoshiarpur%2C+Punjab+144523&output=embed",
   },
   hours: [
-    { days: "Monday – Thursday", time: "11:00 AM – 10:30 PM" },
-    { days: "Friday – Sunday", time: "11:00 AM – 11:30 PM" },
+    { days: "Monday – Thursday", time: "11:00 AM – 9:30 PM" },
+    { days: "Friday – Sunday", time: "11:00 AM – 9:30 PM" },
   ],
   socials: {
     instagram: "https://instagram.com/",

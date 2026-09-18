@@ -14,9 +14,14 @@ export const site = {
   phoneHref: "tel:+919779332204",
   email: "hello@therollandmomos.com",
   address: {
-    line1: "Shop No. 12, Food Street Market",
-    line2: "Near City Mall, Your City 000000",
-    mapsUrl: "https://maps.google.com/?q=The+Roll+and+Momos+Street+Food",
+    line1: "Jhungian, Teh. Garhshankar",
+    line2: "Hoshiarpur, Punjab 144523",
+    mapsUrl:
+      "https://www.google.com/maps/search/?api=1&query=Jhungian%2C+Garhshankar%2C+Hoshiarpur%2C+Punjab+144523",
+    // Embedded on the contact page. Swap for a "Share → Embed a map" link once
+    // the shop has its own Google Business listing.
+    mapsEmbedUrl:
+      "https://www.google.com/maps?q=Jhungian%2C+Garhshankar%2C+Hoshiarpur%2C+Punjab+144523&output=embed",
   },
   hours: [
     { days: "Monday – Thursday", time: "11:00 AM – 10:30 PM" },

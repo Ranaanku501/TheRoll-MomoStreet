@@ -93,12 +93,16 @@ export default function ContactPage() {
           </div>
 
           <div className="overflow-hidden rounded-3xl border border-charcoal-900/10 bg-white shadow-card">
-            <div className="flex h-52 flex-col items-center justify-center gap-2 bg-gradient-to-br from-masala-100 to-chilli-100 text-center">
-              <span className="text-4xl" aria-hidden>
-                📍
-              </span>
-              <p className="px-6 text-sm font-semibold text-charcoal-900/70">
-                Replace this block with a Google Maps embed of your shop
+            <iframe
+              src={site.address.mapsEmbedUrl}
+              title={`Map showing ${site.fullName} in ${site.address.line1}`}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-64 w-full border-0"
+            />
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-charcoal-900/10 px-5 py-4">
+              <p className="text-sm font-semibold text-charcoal-900/70">
+                {site.address.line1}, {site.address.line2}
               </p>
               <a
                 href={site.address.mapsUrl}

@@ -79,6 +79,8 @@ home screen from a plain link — no app store needed.
 | `src/app/manifest.ts`              | App name, colours, icons, home-screen shortcuts                 |
 | `public/sw.js`                     | Service worker: caches pages and assets for slow / no internet   |
 | `public/offline.html`              | Shown if someone opens the app with no connection                |
+| `/install` (`/app`, `/download`)   | Download page: install button, per-phone steps and a printable QR |
+| `src/components/install-provider.tsx`| Shared install state: detects platform and holds Chrome's prompt |
 | `src/components/install-prompt.tsx`| "Install app" banner, plus Add to Home Screen steps on iPhone    |
 | `public/icons/`                    | 192px, 512px and maskable icons generated from the logo          |
 

@@ -62,6 +62,11 @@ export function Footer() {
                 Full menu →
               </Link>
             </li>
+            <li>
+              <Link href="/install" className="font-semibold text-masala-400">
+                Download app ↓
+              </Link>
+            </li>
           </ul>
         </div>
 

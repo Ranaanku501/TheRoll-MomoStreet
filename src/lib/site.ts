@@ -6,6 +6,8 @@ export const site = {
   name: "The Roll & Momos",
   tagline: "Street Food",
   fullName: "The Roll & Momos Street Food",
+  // Live site address. Used for the QR code and share links on /install.
+  url: "https://the-roll-momo-street.vercel.app",
   description:
     "Steamed & fried momos, crispy spring rolls, egg and paneer rolls, hakka noodles, burgers and more — hot off the tawa, wrapped fresh for you.",
   // Digits only, with country code. Used for the WhatsApp order link.

@@ -12,6 +12,7 @@ const links = [
   { href: "/menu", label: "Menu" },
   { href: "/about", label: "Our Story" },
   { href: "/contact", label: "Visit Us" },
+  { href: "/install", label: "Get App" },
 ];
 
 export function Navbar() {

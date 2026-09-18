@@ -1,100 +1,48 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useInstall } from "@/components/install-provider";
 import { site } from "@/lib/site";
-
-type BeforeInstallPromptEvent = Event & {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-};
 
 const DISMISS_KEY = "trm-install-dismissed";
 const DISMISS_DAYS = 14;
 
-const isStandalone = () =>
-  window.matchMedia("(display-mode: standalone)").matches ||
-  // Safari on iOS exposes its own flag instead of display-mode.
-  (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
-
-const isIos = () =>
-  /iphone|ipad|ipod/i.test(window.navigator.userAgent) ||
-  // iPads report as Mac, so check for touch support too.
-  (window.navigator.platform === "MacIntel" && window.navigator.maxTouchPoints > 1);
-
 const recentlyDismissed = () => {
   const stored = window.localStorage.getItem(DISMISS_KEY);
   if (!stored) return false;
-  const days = (Date.now() - Number(stored)) / 86_400_000;
-  return days < DISMISS_DAYS;
+  return (Date.now() - Number(stored)) / 86_400_000 < DISMISS_DAYS;
 };
 
 export function InstallPrompt() {
-  const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(
-    null,
-  );
-  const [showIosSteps, setShowIosSteps] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const { canPrompt, isInstalled, platform, ready, promptInstall } = useInstall();
+  const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
-    if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
-        // Registration failures are not fatal — the site still works.
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isStandalone() || recentlyDismissed()) return;
-
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault();
-      setInstallEvent(event as BeforeInstallPromptEvent);
-      setVisible(true);
-    };
-
-    const onInstalled = () => {
-      setVisible(false);
-      setInstallEvent(null);
-    };
-
-    window.addEventListener("beforeinstallprompt", onBeforeInstall);
-    window.addEventListener("appinstalled", onInstalled);
-
-    // iOS never fires beforeinstallprompt, so offer manual steps instead.
-    let iosTimer: number | undefined;
-    if (isIos()) {
-      iosTimer = window.setTimeout(() => {
-        setShowIosSteps(true);
-        setVisible(true);
-      }, 2500);
-    }
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", onBeforeInstall);
-      window.removeEventListener("appinstalled", onInstalled);
-      if (iosTimer) window.clearTimeout(iosTimer);
-    };
+    if (!recentlyDismissed()) setAllowed(true);
   }, []);
 
   const dismiss = () => {
     window.localStorage.setItem(DISMISS_KEY, String(Date.now()));
-    setVisible(false);
+    setAllowed(false);
   };
+
+  const showIosSteps = platform === "ios";
+  // Show when Chrome offers a prompt, or on iOS where it never will.
+  const shouldShow =
+    allowed && ready && !isInstalled && (canPrompt || showIosSteps);
+
+  if (!shouldShow) return null;
 
   const install = async () => {
-    if (!installEvent) return;
-    await installEvent.prompt();
-    const { outcome } = await installEvent.userChoice;
+    const outcome = await promptInstall();
     if (outcome === "dismissed") dismiss();
-    setInstallEvent(null);
-    setVisible(false);
+    else setAllowed(false);
   };
 
-  if (!visible) return null;
-
   return (
-    <div className="fixed inset-x-3 bottom-3 z-[45] mx-auto max-w-md animate-fade-up sm:inset-x-auto sm:right-6 sm:bottom-6">
+    <div className="fixed inset-x-3 bottom-3 z-[45] mx-auto max-w-md animate-fade-up sm:inset-x-auto sm:bottom-6 sm:right-6">
       <div className="card flex items-start gap-3 p-4">
         <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-charcoal-900/10 bg-white">
           <Image
@@ -112,15 +60,11 @@ export function InstallPrompt() {
           </p>
 
           {showIosSteps ? (
-            <ol className="mt-1.5 space-y-1 text-xs leading-relaxed text-charcoal-900/65">
-              <li>
-                1. Tap the <span className="font-bold">Share</span> button in
-                Safari&apos;s toolbar.
-              </li>
-              <li>
-                2. Choose <span className="font-bold">Add to Home Screen</span>.
-              </li>
-            </ol>
+            <p className="mt-1 text-xs leading-relaxed text-charcoal-900/65">
+              Tap <span className="font-bold">Share</span>, then{" "}
+              <span className="font-bold">Add to Home Screen</span> for one-tap
+              ordering.
+            </p>
           ) : (
             <p className="mt-1 text-xs leading-relaxed text-charcoal-900/65">
               Add us to your home screen for one-tap ordering, even on slow
@@ -130,11 +74,19 @@ export function InstallPrompt() {
 
           <div className="mt-3 flex items-center gap-2">
             {showIosSteps ? (
-              <button type="button" onClick={dismiss} className="btn-primary px-4 py-2 text-xs">
-                Got it
-              </button>
+              <Link
+                href="/install"
+                onClick={dismiss}
+                className="btn-primary px-4 py-2 text-xs"
+              >
+                Show me how
+              </Link>
             ) : (
-              <button type="button" onClick={install} className="btn-primary px-4 py-2 text-xs">
+              <button
+                type="button"
+                onClick={install}
+                className="btn-primary px-4 py-2 text-xs"
+              >
                 Install app
               </button>
             )}

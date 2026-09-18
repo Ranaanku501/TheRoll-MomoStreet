@@ -4,6 +4,7 @@ import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
 import { Footer } from "@/components/footer";
 import { InstallPrompt } from "@/components/install-prompt";
+import { InstallProvider } from "@/components/install-provider";
 import { Navbar } from "@/components/navbar";
 import { site } from "@/lib/site";
 import "./globals.css";
@@ -64,13 +65,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable} font-sans`}>
-        <CartProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <CartDrawer />
-          <InstallPrompt />
-        </CartProvider>
+        <InstallProvider>
+          <CartProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <CartDrawer />
+            <InstallPrompt />
+          </CartProvider>
+        </InstallProvider>
       </body>
     </html>
   );

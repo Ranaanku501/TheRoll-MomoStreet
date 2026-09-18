@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Baloo_2, Plus_Jakarta_Sans } from "next/font/google";
 import { CartDrawer } from "@/components/cart-drawer";
 import { CartProvider } from "@/components/cart-provider";
+import { CartToast } from "@/components/cart-toast";
 import { Footer } from "@/components/footer";
 import { InstallPrompt } from "@/components/install-prompt";
 import { InstallProvider } from "@/components/install-provider";
@@ -76,6 +77,7 @@ export default function RootLayout({
             <main>{children}</main>
             <Footer />
             <CartDrawer />
+            <CartToast />
             <InstallPrompt />
           </CartProvider>
         </InstallProvider>

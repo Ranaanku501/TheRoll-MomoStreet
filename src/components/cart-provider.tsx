@@ -23,10 +23,8 @@ export type CartLine = {
 
 export type OrderDetails = {
   orderType: "delivery" | "takeaway";
-  /** Typed address. Required for delivery orders. */
+  /** Typed village / area. Required for delivery, max 100 characters. */
   location?: string;
-  /** Google Maps link built from the browser's GPS, when shared. */
-  mapsLink?: string;
   note?: string;
 };
 
@@ -35,8 +33,10 @@ type CartContextValue = {
   count: number;
   total: number;
   isOpen: boolean;
+  lastAdded: string | null;
   openCart: () => void;
   closeCart: () => void;
+  dismissAdded: () => void;
   add: (item: MenuItem, size?: CartLine["size"]) => void;
   increment: (key: string) => void;
   decrement: (key: string) => void;
@@ -53,6 +53,7 @@ export const lineKey = (line: Pick<CartLine, "id" | "size">) =>
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [lastAdded, setLastAdded] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -103,7 +104,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
       return [...current, next];
     });
-    setIsOpen(true);
+    setLastAdded(next.name);
   }, []);
 
   const increment = useCallback((key: string) => {
@@ -143,7 +144,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
 
   const whatsappUrl = useCallback(
-    ({ orderType, location, mapsLink, note }: OrderDetails) => {
+    ({ orderType, location, note }: OrderDetails) => {
       const rows = lines.map(
         (line) =>
           `• ${line.name} x${line.quantity} — ${site.currency}${
@@ -160,9 +161,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         orderType === "delivery" && location?.trim()
           ? `Delivery address: ${location.trim()}`
           : null,
-        orderType === "delivery" && mapsLink ? `Live location: ${mapsLink}` : null,
-        "Payment: UPI only (no cash)",
-        site.upiId ? `UPI ID: ${site.upiId}` : null,
         note?.trim() ? `Note: ${note.trim()}` : null,
       ]
         .filter(Boolean)
@@ -179,8 +177,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       count,
       total,
       isOpen,
-      openCart: () => setIsOpen(true),
+      lastAdded,
+      openCart: () => {
+        setLastAdded(null);
+        setIsOpen(true);
+      },
       closeCart: () => setIsOpen(false),
+      dismissAdded: () => setLastAdded(null),
       add,
       increment,
       decrement,
@@ -188,7 +191,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       clear,
       whatsappUrl,
     }),
-    [lines, count, total, isOpen, add, increment, decrement, remove, clear, whatsappUrl],
+    [lines, count, total, isOpen, lastAdded, add, increment, decrement, remove, clear, whatsappUrl],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

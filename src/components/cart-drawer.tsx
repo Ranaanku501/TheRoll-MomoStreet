@@ -3,9 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { lineKey, useCart } from "@/components/cart-provider";
-import { formatPrice, site, upiPayUrl } from "@/lib/site";
-
-type GeoStatus = "idle" | "loading" | "ok" | "denied";
+import { ADDRESS_MAX, formatPrice, site } from "@/lib/site";
 
 export function CartDrawer() {
   const {
@@ -23,8 +21,6 @@ export function CartDrawer() {
   const [note, setNote] = useState("");
   const [orderType, setOrderType] = useState<"delivery" | "takeaway">("delivery");
   const [location, setLocation] = useState("");
-  const [mapsLink, setMapsLink] = useState("");
-  const [geoStatus, setGeoStatus] = useState<GeoStatus>("idle");
   const [triedSubmit, setTriedSubmit] = useState(false);
 
   useEffect(() => {
@@ -36,36 +32,15 @@ export function CartDrawer() {
   }, [closeCart]);
 
   const belowMinimum = orderType === "delivery" && total > 0 && total < site.minOrder;
-  const needsLocation = orderType === "delivery";
-  const locationOk = !needsLocation || location.trim().length > 6;
+  const trimmed = location.trim();
+  const locationOk =
+    orderType !== "delivery" || (trimmed.length > 0 && trimmed.length <= ADDRESS_MAX);
   const canOrder = lines.length > 0 && locationOk && !belowMinimum;
 
   const orderDetails = {
     orderType,
-    location: location.trim() || undefined,
-    mapsLink: mapsLink || undefined,
+    location: trimmed || undefined,
     note,
-  };
-
-  const shareLocation = () => {
-    if (!navigator.geolocation) {
-      setGeoStatus("denied");
-      return;
-    }
-    setGeoStatus("loading");
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const link = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        setMapsLink(link);
-        if (!location.trim()) {
-          setLocation(`Live pin: ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
-        }
-        setGeoStatus("ok");
-      },
-      () => setGeoStatus("denied"),
-      { enableHighAccuracy: true, timeout: 12_000 },
-    );
   };
 
   const handleWhatsApp = (event: React.MouseEvent<HTMLAnchorElement>) => {
@@ -73,8 +48,6 @@ export function CartDrawer() {
     event.preventDefault();
     setTriedSubmit(true);
   };
-
-  const payUrl = upiPayUrl(total, `Order ${formatPrice(total)}`);
 
   return (
     <div
@@ -217,49 +190,32 @@ export function CartDrawer() {
               </div>
 
               {orderType === "delivery" ? (
-                <div className="space-y-2">
-                  <label className="block space-y-1.5">
-                    <span className="text-xs font-semibold uppercase tracking-wide text-charcoal-900/60">
-                      Delivery location *
+                <label className="block space-y-1.5">
+                  <span className="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-charcoal-900/60">
+                    Delivery location *
+                    <span className="normal-case tracking-normal text-charcoal-900/40">
+                      {location.length}/{ADDRESS_MAX}
                     </span>
-                    <textarea
-                      required
-                      value={location}
-                      onChange={(event) => setLocation(event.target.value)}
-                      rows={3}
-                      placeholder="House / shop name, street, landmark, village…"
-                      className={`w-full resize-none rounded-2xl border bg-white px-4 py-2.5 text-sm outline-none transition focus:border-chilli-500 focus:ring-2 focus:ring-chilli-500/20 ${
-                        triedSubmit && !locationOk
-                          ? "border-chilli-500"
-                          : "border-charcoal-900/15"
-                      }`}
-                    />
-                  </label>
-
-                  <button
-                    type="button"
-                    onClick={shareLocation}
-                    className="btn-secondary w-full py-2.5 text-xs"
-                  >
-                    {geoStatus === "loading"
-                      ? "Finding you…"
-                      : geoStatus === "ok"
-                        ? "Live location added ✓"
-                        : "Use my current location"}
-                  </button>
-
-                  {geoStatus === "denied" ? (
-                    <p className="text-xs font-semibold text-chilli-700">
-                      Location permission was denied. Type the address above instead.
-                    </p>
-                  ) : null}
-
+                  </span>
+                  <textarea
+                    required
+                    maxLength={ADDRESS_MAX}
+                    value={location}
+                    onChange={(event) => setLocation(event.target.value.slice(0, ADDRESS_MAX))}
+                    rows={3}
+                    placeholder="Village, area or landmark — e.g. Mohali, Jhungian…"
+                    className={`w-full resize-none rounded-2xl border bg-white px-4 py-2.5 text-sm outline-none transition focus:border-chilli-500 focus:ring-2 focus:ring-chilli-500/20 ${
+                      triedSubmit && !locationOk
+                        ? "border-chilli-500"
+                        : "border-charcoal-900/15"
+                    }`}
+                  />
                   {triedSubmit && !locationOk ? (
                     <p className="text-xs font-semibold text-chilli-700">
-                      Please enter a delivery address so we know where to send this.
+                      Please type a village or area name (up to {ADDRESS_MAX} characters).
                     </p>
                   ) : null}
-                </div>
+                </label>
               ) : (
                 <p className="rounded-2xl bg-white px-4 py-3 text-xs leading-relaxed text-charcoal-900/60">
                   Pickup from {site.address.line1}, {site.address.line2}.
@@ -291,31 +247,12 @@ export function CartDrawer() {
               </span>
             </div>
 
-            <p className="rounded-2xl bg-chilli-50 px-4 py-2.5 text-xs font-semibold leading-relaxed text-chilli-800">
-              UPI only — no cash. Pay with Google Pay / PhonePe, then send the
-              order on WhatsApp.
-            </p>
-
             {belowMinimum ? (
               <p className="rounded-2xl bg-masala-50 px-4 py-2.5 text-xs font-semibold text-masala-700">
                 Add {formatPrice(site.minOrder - total)} more to reach the{" "}
                 {formatPrice(site.minOrder)} delivery minimum. Takeaway has no
                 minimum.
               </p>
-            ) : null}
-
-            {payUrl ? (
-              <a
-                href={canOrder ? payUrl : undefined}
-                onClick={(event) => {
-                  if (canOrder) return;
-                  event.preventDefault();
-                  setTriedSubmit(true);
-                }}
-                className="btn-primary w-full bg-[#1a73e8] hover:bg-[#1558b3]"
-              >
-                Pay {formatPrice(total)} with UPI
-              </a>
             ) : null}
 
             <a

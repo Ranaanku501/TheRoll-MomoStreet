@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useInstall } from "@/components/install-provider";
+import { IosInstallSheet } from "@/components/ios-install-sheet";
 import { site } from "@/lib/site";
 
 const DISMISS_KEY = "trm-install-dismissed";
@@ -18,6 +18,7 @@ const recentlyDismissed = () => {
 export function InstallPrompt() {
   const { canPrompt, isInstalled, platform, ready, promptInstall } = useInstall();
   const [allowed, setAllowed] = useState(false);
+  const [showIosSheet, setShowIosSheet] = useState(false);
 
   useEffect(() => {
     if (!recentlyDismissed()) setAllowed(true);
@@ -33,7 +34,11 @@ export function InstallPrompt() {
   const shouldShow =
     allowed && ready && !isInstalled && (canPrompt || showIosSteps);
 
-  if (!shouldShow) return null;
+  if (!shouldShow) {
+    return showIosSheet ? (
+      <IosInstallSheet onClose={() => setShowIosSheet(false)} />
+    ) : null;
+  }
 
   const install = async () => {
     const outcome = await promptInstall();
@@ -74,13 +79,13 @@ export function InstallPrompt() {
 
           <div className="mt-3 flex items-center gap-2">
             {showIosSteps ? (
-              <Link
-                href="/install"
-                onClick={dismiss}
+              <button
+                type="button"
+                onClick={() => setShowIosSheet(true)}
                 className="btn-primary px-4 py-2 text-xs"
               >
                 Show me how
-              </Link>
+              </button>
             ) : (
               <button
                 type="button"

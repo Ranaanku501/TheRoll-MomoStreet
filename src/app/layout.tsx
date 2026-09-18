@@ -53,6 +53,11 @@ export const metadata: Metadata = {
     title: site.name,
     statusBarStyle: "default",
   },
+  other: {
+    // Next only emits the unprefixed tag; older iOS still needs this one to
+    // open the installed app fullscreen instead of inside Safari.
+    "apple-mobile-web-app-capable": "yes",
+  },
 };
 
 export const viewport: Viewport = {

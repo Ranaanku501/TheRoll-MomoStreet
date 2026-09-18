@@ -4,14 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useInstall } from "@/components/install-provider";
+import { IosInstallSheet } from "@/components/ios-install-sheet";
 import { site } from "@/lib/site";
 
 const steps: Record<string, { title: string; items: string[] }> = {
   ios: {
     title: "On iPhone & iPad (Safari)",
     items: [
-      "Tap the Share button at the bottom of Safari.",
-      "Scroll down and tap “Add to Home Screen”.",
+      "Make sure you are in Safari — not the browser inside WhatsApp or Instagram.",
+      "Tap the Share button, then “Add to Home Screen”.",
       "Tap “Add” — our logo appears on your home screen.",
     ],
   },
@@ -52,6 +53,11 @@ export function InstallPanel() {
   const { canPrompt, isInstalled, platform, ready, promptInstall } = useInstall();
   const [status, setStatus] = useState<"idle" | "dismissed" | "installed">("idle");
   const [copied, setCopied] = useState(false);
+  const [showIosSheet, setShowIosSheet] = useState(false);
+
+  // Safari never fires an install event, so iOS always gets the manual guide
+  // rather than a button that cannot do anything.
+  const isIos = ready && platform === "ios";
 
   const handleInstall = async () => {
     const outcome = await promptInstall();
@@ -104,6 +110,24 @@ export function InstallPanel() {
               </Link>
               .
             </div>
+          ) : isIos ? (
+            <>
+              <button
+                type="button"
+                onClick={() => setShowIosSheet(true)}
+                className="btn-primary w-full py-4 text-base"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                  <path d="M12 3v11m0-11 3.5 3.5M12 3 8.5 6.5" strokeLinecap="round" />
+                  <path d="M7 10H5.5A1.5 1.5 0 0 0 4 11.5v7A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 18.5 10H17" strokeLinecap="round" />
+                </svg>
+                Add to Home Screen
+              </button>
+              <p className="text-center text-xs leading-relaxed text-charcoal-900/55">
+                Tap for the 3 quick steps — Apple does not let websites install
+                themselves.
+              </p>
+            </>
           ) : (
             <>
               <button
@@ -120,11 +144,9 @@ export function InstallPanel() {
 
               {!canPrompt && ready ? (
                 <p className="text-center text-xs leading-relaxed text-charcoal-900/55">
-                  {platform === "ios"
-                    ? "On iPhone, Apple requires you to add it manually — follow the two steps below."
-                    : platform === "in-app-browser"
-                      ? "Open this page in Chrome or Safari to enable the install button."
-                      : "Your browser has not offered the install option yet. Follow the steps below, or try Chrome."}
+                  {platform === "in-app-browser"
+                    ? "Open this page in Chrome or Safari to enable the install button."
+                    : "Your browser has not offered the install option yet. Follow the steps below, or try Chrome."}
                 </p>
               ) : null}
 
@@ -174,6 +196,10 @@ export function InstallPanel() {
           </Link>
         </div>
       </div>
+
+      {showIosSheet ? (
+        <IosInstallSheet onClose={() => setShowIosSheet(false)} />
+      ) : null}
     </div>
   );
 }

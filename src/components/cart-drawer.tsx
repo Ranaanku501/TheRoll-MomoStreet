@@ -16,6 +16,7 @@ export function CartDrawer() {
     decrement,
     remove,
     clear,
+    checkout,
     whatsappUrl,
   } = useCart();
   const [note, setNote] = useState("");
@@ -44,9 +45,12 @@ export function CartDrawer() {
   };
 
   const handleWhatsApp = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (canOrder) return;
-    event.preventDefault();
-    setTriedSubmit(true);
+    if (!canOrder) {
+      event.preventDefault();
+      setTriedSubmit(true);
+      return;
+    }
+    checkout();
   };
 
   return (

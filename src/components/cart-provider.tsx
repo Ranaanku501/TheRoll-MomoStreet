@@ -42,6 +42,10 @@ type CartContextValue = {
   decrement: (key: string) => void;
   remove: (key: string) => void;
   clear: () => void;
+  checkout: () => void;
+  undoCheckout: () => void;
+  dismissUndo: () => void;
+  canUndoCheckout: boolean;
   whatsappUrl: (details: OrderDetails) => string;
 };
 
@@ -54,6 +58,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [lastAdded, setLastAdded] = useState<string | null>(null);
+  const [undoLines, setUndoLines] = useState<CartLine[] | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -129,7 +134,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setLines((current) => current.filter((line) => lineKey(line) !== key));
   }, []);
 
-  const clear = useCallback(() => setLines([]), []);
+  const clear = useCallback(() => {
+    setUndoLines(null);
+    setLines([]);
+  }, []);
+
+  const checkout = useCallback(() => {
+    setUndoLines((currentUndo) => currentUndo ?? lines);
+    setLines([]);
+    setLastAdded(null);
+    setIsOpen(false);
+  }, [lines]);
+
+  const undoCheckout = useCallback(() => {
+    setUndoLines((snapshot) => {
+      if (snapshot?.length) {
+        setLines(snapshot);
+        setIsOpen(true);
+      }
+      return null;
+    });
+  }, []);
+
+  const dismissUndo = useCallback(() => setUndoLines(null), []);
 
   const { count, total } = useMemo(
     () =>
@@ -189,9 +216,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       decrement,
       remove,
       clear,
+      checkout,
+      undoCheckout,
+      dismissUndo,
+      canUndoCheckout: undoLines !== null,
       whatsappUrl,
     }),
-    [lines, count, total, isOpen, lastAdded, add, increment, decrement, remove, clear, whatsappUrl],
+    [
+      lines,
+      count,
+      total,
+      isOpen,
+      lastAdded,
+      undoLines,
+      add,
+      increment,
+      decrement,
+      remove,
+      clear,
+      checkout,
+      undoCheckout,
+      dismissUndo,
+      whatsappUrl,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

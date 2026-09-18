@@ -17,12 +17,12 @@ npm run lint
 
 ## Pages
 
-| Route      | What's on it                                                        |
-| ---------- | ------------------------------------------------------------------- |
-| `/`        | Hero, category grid, bestsellers, why-us, reviews, timings CTA      |
-| `/menu`    | All 49 items with search, category tabs and pure veg / egg filter   |
-| `/about`   | Story, timeline and the three rules behind the counter              |
-| `/contact` | Address, timings, map placeholder and a WhatsApp enquiry form       |
+| Route      | What's on it                                                      |
+| ---------- | ----------------------------------------------------------------- |
+| `/`        | Hero, category grid, bestsellers, why-us, reviews, timings CTA    |
+| `/menu`    | All 49 items with search, category tabs and pure veg / egg filter |
+| `/about`   | Story, timeline and the three rules behind the counter            |
+| `/contact` | Address, timings, map placeholder and a WhatsApp enquiry form     |
 
 ## The two files you will edit most
 
@@ -60,7 +60,7 @@ Drop images into `public/menu/` and point the item's `image` field at them
 (e.g. `image: "/menu/egg-roll.jpg"`). Without an image the card falls back to a gradient +
 emoji tile, so the site never looks broken. Aim for ~800×600 JPGs under 200 KB.
 
-Your logo is at `public/logo.png` (used in the navbar) and `src/app/icon.png` (browser tab).
+Your logo is at `public/logos.png` (used in the navbar) and `src/app/icon.png` (browser tab).
 
 ## How ordering works
 

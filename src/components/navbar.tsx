@@ -37,10 +37,10 @@ export function Navbar() {
         }`}
     >
       <div className="container-page flex h-[72px] sm:h-[100px] items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-0">
-          <span className="relative h-32 w-32 overflow-hidden ">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="relative h-24 w-24 overflow-hidden ">
             <Image
-              src="/logo.png"
+              src="/logos.png"
               alt={`${site.fullName} logo`}
               fill
               sizes=""
